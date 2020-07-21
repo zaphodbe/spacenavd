@@ -65,7 +65,7 @@ int init_devices(void)
 		for(i=0; i<usbdev->num_devfiles; i++) {
 			if((dev = dev_path_in_use(usbdev->devfiles[i]))) {
 				if(verbose) {
-					logmsg(LOG_WARNING, "already using device: %s (%s)\n", dev->name, dev->path);
+					logmsg(LOG_WARNING, "already using device: %s (%s)\n", usbdev->name, dev->path);
 				}
 				break;
 			}
@@ -75,8 +75,9 @@ int init_devices(void)
 
 			if(open_dev_usb(dev) == -1) {
 				remove_device(dev);
+                logmsg(LOG_ERR, "error opening device: %s (%s)\n", usbdev->name, dev->path);
 			} else {
-				logmsg(LOG_INFO, "using device: %s (%s)\n", dev->name, dev->path);
+				logmsg(LOG_INFO, "using device: %s (%s)\n", usbdev->name, dev->path);
 				device_added++;
 				break;
 			}

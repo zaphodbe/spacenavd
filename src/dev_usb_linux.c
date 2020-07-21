@@ -528,4 +528,6 @@ alt_detect:
 	return devlist;
 }
 
+#else
+int spacenavd_dev_usb_linux_silence_empty_warning;
 #endif	/* __linux__ */

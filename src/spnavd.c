@@ -128,7 +128,9 @@ int main(int argc, char **argv)
 
 	if(become_daemon) {
 		daemonize();
-	}
+	} else {
+        start_logfile(logfile);
+    }
 	write_pid_file();
 
 	logmsg(LOG_INFO, "Spacenav daemon " VERSION "\n");

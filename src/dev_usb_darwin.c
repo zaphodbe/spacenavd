@@ -22,7 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <errno.h>
 #include <IOKit/IOKitLib.h>
+#include <IOKit/IOKitKeys.h>
+#include <IOKit/IOBSD.h>
 #include <IOKit/hid/IOHIDLib.h>
+#include <IOKit/hid/IOHIDKeys.h>
+#include <IOKit/usb/USBSpec.h>
 #include "spnavd.h"
 #include "dev.h"
 #include "dev_usb.h"
@@ -41,12 +45,12 @@ struct usb_device_info *find_usb_devices(int (*match)(const struct usb_device_in
 	io_object_t dev;
 	io_iterator_t iter;
 	CFMutableDictionaryRef match_dict;
-	CFNumberRef number_ref;
 
 	match_dict = IOServiceMatching(kIOHIDDeviceKey);
 
 	/* add filter rule: vendor-id should be 3dconnexion's */
-	/*number_ref = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vendor_id);
+	/*CFNumberRef number_ref;
+	number_ref = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vendor_id);
 	CFDictionarySetValue(match_dict, CFSTR(kIOHIDVendorIDKey), number_ref);
 	CFRelease(number_ref);
 	*/
@@ -67,9 +71,61 @@ struct usb_device_info *find_usb_devices(int (*match)(const struct usb_device_in
 		}
 		devinfo.num_devfiles = 1;
 
-		/* TODO retrieve vendor id and product id */
+        /* get vendor ID */
+        CFTypeRef vidref = NULL;
+        vidref = IORegistryEntryCreateCFProperty(dev, CFSTR("idVendor"),
+                                kCFAllocatorDefault, kNilOptions);
+        if (vidref) {
+            CFNumberGetValue((CFNumberRef)vidref, kCFNumberIntType, &devinfo.vendorid);
+            CFRelease(vidref);
+        }
 
-		if(!match || match(&devinfo)) {
+        /* get product ID */
+        CFTypeRef pidref = NULL;
+        pidref = IORegistryEntryCreateCFProperty(dev, CFSTR("idProduct"),
+                                kCFAllocatorDefault, kNilOptions);
+        if (pidref) {
+            CFNumberGetValue((CFNumberRef)pidref, kCFNumberIntType, &devinfo.productid);
+            CFRelease(pidref);
+        }
+
+        /* get product vendor */
+        CFTypeRef product_vendor_ref = NULL;
+        product_vendor_ref = IORegistryEntrySearchCFProperty(dev,
+                                kIOServicePlane /*kIOUSBPlane*/,
+                                CFSTR(kUSBVendorString),
+                                kCFAllocatorDefault,
+                                kIORegistryIterateParents | kIORegistryIterateRecursively);
+        if(product_vendor_ref != NULL) {
+            CFStringGetCString((CFStringRef)product_vendor_ref, dev_path, 512,
+                               kCFStringEncodingUTF8);
+            CFRelease(product_vendor_ref);
+            if(!(devinfo.name = strdup(dev_path))) {
+                logmsg(LOG_ERR, "failed to allocate device vendor buffer: %s\n", strerror(errno));
+                continue;
+            }
+        }
+
+        /* get product name */
+        CFTypeRef product_name_ref = NULL;
+        product_name_ref = IORegistryEntrySearchCFProperty(dev,
+                                kIOServicePlane /*kIOUSBPlane*/,
+                                CFSTR(kUSBProductString),
+                                kCFAllocatorDefault,
+                                kIORegistryIterateParents | kIORegistryIterateRecursively);
+        if(product_name_ref != NULL) {
+            CFStringGetCString((CFStringRef)product_name_ref, dev_path, 512,
+                               kCFStringEncodingUTF8);
+            CFRelease(product_name_ref);
+            if(!(devinfo.name = strdup(dev_path))) {
+                logmsg(LOG_ERR, "failed to allocate device name buffer: %s\n", strerror(errno));
+                continue;
+            }
+        }
+
+        if(!match || match(&devinfo)) {
+            print_usb_device_info(&devinfo);
+
 			struct usb_device_info *node = malloc(sizeof *node);
 			if(node) {
 				if(verbose) {
@@ -85,9 +141,10 @@ struct usb_device_info *find_usb_devices(int (*match)(const struct usb_device_in
 				logmsg(LOG_ERR, "failed to allocate usb device info node: %s\n", strerror(errno));
 			}
 		}
+
+        IOObjectRelease(dev);
 	}
 
-	IOObjectRelease(dev);
 	IOObjectRelease(iter);
 	return devlist;
 }
