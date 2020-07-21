@@ -1,0 +1,131 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+    Version="10.0"
+    VendorName="SlickEdit"
+    TemplateName="Makefile"
+    WorkingDir=".">
+    <Config
+        Name="Release"
+        Type="Makefile"
+        OutputFile=""
+        CompilerConfigName="">
+        <Menu>
+            <Target
+                Name="Compile"
+                MenuCaption="&amp;Compile"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveCurrent"
+                RunFromDir="%rw">
+                <Exec/>
+            </Target>
+            <Target
+                Name="Build"
+                MenuCaption="&amp;Build"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveWorkspaceFiles"
+                RunFromDir="%rw">
+                <Exec/>
+            </Target>
+            <Target
+                Name="Rebuild"
+                MenuCaption="&amp;Rebuild"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveWorkspaceFiles"
+                RunFromDir="%rw">
+                <Exec/>
+            </Target>
+            <Target
+                Name="Debug"
+                MenuCaption="&amp;Debug"
+                SaveOption="SaveNone"
+                RunFromDir="%rw">
+                <Exec/>
+            </Target>
+            <Target
+                Name="Execute"
+                MenuCaption="E&amp;xecute"
+                SaveOption="SaveNone"
+                RunFromDir="%rw">
+                <Exec CmdLine='"spacenavd.exe"'/>
+            </Target>
+        </Menu>
+    </Config>
+    <Files>
+        <Folder
+            Name="Source Files"
+            Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.c++;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.scala;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl;*.d;*.m;*.mm;*.go;*.groovy;*.gsh"
+            GUID="{CAA407A6-1206-4C54-8B3A-4FFD83B23C76}">
+            <F N="src/xdetect_linux.c"/>
+            <F N="src/proto_unix.c"/>
+            <F N="src/magellan/smag_comm.c"/>
+            <F N="src/magellan/smag_detect.c"/>
+            <F N="src/magellan/smag.c"/>
+            <F N="src/magellan/smag_event.c"/>
+            <F N="src/logger.c"/>
+            <F N="src/hotplug_linux.c"/>
+            <F N="src/kbemu.c"/>
+            <F N="src/dev_serial.c"/>
+            <F N="src/spnavd.c"/>
+            <F N="src/hotplug_darwin.c"/>
+            <F N="src/client.c"/>
+            <F N="src/xdetect_freebsd.c"/>
+            <F N="src/proto_x11.c"/>
+            <F N="src/dev_usb_linux.c"/>
+            <F N="src/event.c"/>
+            <F N="src/dev_usb.c"/>
+            <F N="src/dummy_usb.c"/>
+            <F N="src/dev_usb_darwin.c"/>
+            <F N="src/cfgfile.c"/>
+            <F N="src/dev.c"/>
+            <F N="src/serial/sballserial.c"/>
+            <F N="src/serial/sball.c"/>
+            <F N="src/spnavd_win32.c"/>
+        </Folder>
+        <Folder
+            Name="Header Files"
+            Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.h++;*.inc;*.sh;*.cpy;*.if"
+            GUID="{D4A33398-CC0F-4007-979D-2BA4C10C619A}">
+            <F N="src/proto_x11.h"/>
+            <F N="src/client.h"/>
+            <F N="src/dev_usb.h"/>
+            <F N="src/config.h"/>
+            <F N="src/magellan/smag_detect.h"/>
+            <F N="src/magellan/smag.h"/>
+            <F N="src/magellan/smag_event.h"/>
+            <F N="src/magellan/serialconstants.h"/>
+            <F N="src/magellan/smag_comm.h"/>
+            <F N="src/event.h"/>
+            <F N="src/cfgfile.h"/>
+            <F N="src/dev.h"/>
+            <F N="src/xdetect.h"/>
+            <F N="src/hotplug.h"/>
+            <F N="src/proto_unix.h"/>
+            <F N="src/kbemu.h"/>
+            <F N="src/logger.h"/>
+            <F N="src/spnavd.h"/>
+            <F N="src/serial/sball.h"/>
+            <F N="src/serial/sballserial.h"/>
+            <F N="src/dev_serial.h"/>
+        </Folder>
+        <Folder
+            Name="Resource Files"
+            Filters="*.ico;*.cur;*.dlg"
+            GUID="{2D4CD7EC-279C-4FA2-87B6-4AF5872A1C2C}"/>
+        <Folder
+            Name="Bitmaps"
+            Filters="*.bmp"
+            GUID="{5C4FCFA5-A482-4C13-B83E-42DCA8501AB1}"/>
+        <Folder
+            Name="Other Files"
+            Filters=""
+            GUID="{2DD72339-4F56-49E8-8684-E292E935DBFF}">
+            <F N="AUTHORS"/>
+            <F N="COPYING"/>
+            <F
+                N="Makefile"
+                Type="Makefile"/>
+            <F N="README.md"/>
+            <F N="spnavrc"/>
+        </Folder>
+    </Files>
+</Project>
